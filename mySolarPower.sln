@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mySolarPower.API", "mySolarPower.API\mySolarPower.API.csproj", "{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.API", "mySolarPower.API\mySolarPower.API.csproj", "{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySolarPower.Data", "MySolarPower.Data\MySolarPower.Data.csproj", "{4BC16A77-521B-4BB3-803E-0C649359F93B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
