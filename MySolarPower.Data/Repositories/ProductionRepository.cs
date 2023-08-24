@@ -4,9 +4,13 @@ using MySolarPower.Data.Models;
 
 namespace MySolarPower.Data.Repositories;
 
-public class ProductionRepository : IProductionRepository, IDisposable
+public class ProductionRepository : IProductionRepository
 {
-    private readonly PowerUsageDbContext _context;
+    private readonly PowerUsageDbContext? _context;
+
+    public ProductionRepository()
+    {
+    }
 
     public ProductionRepository(PowerUsageDbContext context)
     {
@@ -14,20 +18,26 @@ public class ProductionRepository : IProductionRepository, IDisposable
     }
     public void Dispose()
     {
-        throw new NotImplementedException();
+        _context?.Dispose();
     }
 
     public async Task<IEnumerable<SolarPower>> GetProductionDataAsync()
     {
+        List<SolarPower> results = new List<SolarPower>();
         try
         {
-            var results = await _context.SolarPowers.ToListAsync();
-            return results;
+            if (_context != null)
+            {
+                results = await _context.SolarPowers.ToListAsync();
+            }
+
         }
         catch (Exception ex)
         {
             //throw new Exception($"Couldn't retrieve entities: {ex.Message}");
-            return Enumerable.Empty<SolarPower>();
+            //return Enumerable.Empty<SolarPower>();
         }
+
+        return results;
     }
 }
