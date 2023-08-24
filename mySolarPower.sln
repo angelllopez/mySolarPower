@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.API", "mySolar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySolarPower.Data", "MySolarPower.Data\MySolarPower.Data.csproj", "{4BC16A77-521B-4BB3-803E-0C649359F93B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mySolarPower.Tests", "mySolarPower.Tests\mySolarPower.Tests.csproj", "{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BC16A77-521B-4BB3-803E-0C649359F93B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
