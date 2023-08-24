@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MySolarPower.API\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\mySolarPower.API\mySolarPower.API.csproj" />
     <ProjectReference Include="..\MySolarPower.Data\MySolarPower.Data.csproj" />
   </ItemGroup>
