@@ -3,6 +3,7 @@ using Moq;
 using MockQueryable.Moq;
 using Microsoft.EntityFrameworkCore;
 using MySolarPower.Data.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace mySolarPower.Tests.MySolarPower.Data.Repositories;
 
@@ -50,7 +51,8 @@ public class ProductionRepositoryTests
     public async Task GetProductionDataAsync_ReturnsExpectedRecords_WhenRecordsExist()
     {
         //Arrange
-        var repository = new ProductionRepository(mockContext.Object);
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
 
         // Act
         var result = await repository.GetProductionDataAsync();
@@ -65,7 +67,8 @@ public class ProductionRepositoryTests
     {
         //Arrange
         var dummyContext = new Mock<PowerUsageDbContext>();
-        var repository = new ProductionRepository(dummyContext.Object);
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(dummyContext.Object, dummyLogger.Object);
 
         // Act
         var result = await repository.GetProductionDataAsync();
