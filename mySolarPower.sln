@@ -5,9 +5,15 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.API", "mySolarPower.API\mySolarPower.API.csproj", "{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySolarPower.Data", "MySolarPower.Data\MySolarPower.Data.csproj", "{4BC16A77-521B-4BB3-803E-0C649359F93B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySolarPower.Data", "MySolarPower.Data\MySolarPower.Data.csproj", "{4BC16A77-521B-4BB3-803E-0C649359F93B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mySolarPower.Tests", "mySolarPower.Tests\mySolarPower.Tests.csproj", "{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.Tests", "mySolarPower.Tests\mySolarPower.Tests.csproj", "{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{0E0A86AF-6A70-4A60-A42F-86BF676282D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3AA309D8-902C-4218-B9F9-219267BDBF5F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BBE1525C-F8A4-4D84-AD35-9ACE2186F810}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8DBAD54F-53B2-40BA-B727-FCF16FCE215E} = {0E0A86AF-6A70-4A60-A42F-86BF676282D1}
+		{4BC16A77-521B-4BB3-803E-0C649359F93B} = {3AA309D8-902C-4218-B9F9-219267BDBF5F}
+		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B} = {BBE1525C-F8A4-4D84-AD35-9ACE2186F810}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE6BC405-4C7E-4BDA-8285-428A7A514EBF}

@@ -44,8 +44,6 @@ public class ProductionRepository : IProductionRepository
         }
         catch (Exception ex)
         {
-            //throw new Exception($"Couldn't retrieve entities: {ex.Message}");
-            //return Enumerable.Empty<SolarPower>();
             _logger?.LogError(ex,
                 "Returned an empty list {@EntityName}, {@DateTimeUtc}",
                     nameof(SolarPower),
