@@ -3,7 +3,6 @@ using Moq;
 using mySolarPower.API.Controllers;
 using MySolarPower.Data.Contracts;
 using MySolarPower.Data.Models;
-using MySolarPower.Data.Repositories;
 
 namespace mySolarPower.Tests.MySolarPower.API.Controllers;
 

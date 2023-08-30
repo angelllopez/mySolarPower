@@ -18,6 +18,7 @@ public class ProductionRepository : IProductionRepository
     public void Dispose()
     {
         _context?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     public async Task<IEnumerable<SolarPower>> GetProductionDataAsync()
@@ -28,7 +29,7 @@ public class ProductionRepository : IProductionRepository
                                   nameof(SolarPower),
                                              DateTime.UtcNow);
 
-        List<SolarPower> results = new List<SolarPower>();
+        List<SolarPower> results = new ();
         try
         {
             results = await _context.SolarPowers.ToListAsync();
@@ -54,7 +55,7 @@ public class ProductionRepository : IProductionRepository
         SolarPower? result = null;
         try
         {
-            result = await _context.SolarPowers.FirstAsync(x => x.Date == date);
+            result = await _context.SolarPowers.Where(x => x.Date == date).SingleAsync();
 
             _logger?.LogInformation(
                 "Completed GetProductionDataByDate {@EntityName}, {@DateTimeUtc}",
