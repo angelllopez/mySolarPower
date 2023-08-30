@@ -7,12 +7,8 @@ namespace MySolarPower.Data.Repositories;
 
 public class ProductionRepository : IProductionRepository
 {
-    private readonly PowerUsageDbContext? _context;
+    private readonly PowerUsageDbContext _context;
     private readonly ILogger<ProductionRepository>? _logger;
-
-    public ProductionRepository()
-    {
-    }
 
     public ProductionRepository(PowerUsageDbContext context, ILogger<ProductionRepository> logger)
     {
@@ -51,5 +47,28 @@ public class ProductionRepository : IProductionRepository
         }
 
         return results;
+    }
+
+    public async Task<SolarPower?> GetProductionDataByDateAsync(DateTime date)
+    {
+        SolarPower? result = null;
+        try
+        {
+            result = await _context.SolarPowers.FirstAsync(x => x.Date == date);
+
+            _logger?.LogInformation(
+                "Completed GetProductionDataByDate {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Returned an empty object {@EntityName}, {@DateTimeUtc}",
+                    nameof(SolarPower),
+                    DateTime.UtcNow);
+        }
+
+        return result;
     }
 }

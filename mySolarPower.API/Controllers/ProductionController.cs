@@ -22,12 +22,12 @@ namespace mySolarPower.API.Controllers
         }
 
         /// <summary>
-        /// Retrieves production data from a repository and returns it as a response.
+        /// Retrieves collection of production data records from a repository and returns it as a response.
         /// </summary>
         /// <returns>
         /// An IActionResult object that contains either a 404 status code
         /// and a message if the production data is not available, or a 200
-        /// status code and the production data as the content if it is 
+        /// status code and a collection production data records as the content if it is 
         /// available.
         /// </returns>
         [HttpGet]
@@ -35,6 +35,31 @@ namespace mySolarPower.API.Controllers
         {
             var productionData = await _repository.GetProductionDataAsync();
             if (!productionData.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(productionData);
+        }
+
+        /// <summary>
+        /// Retrives a single production data record from a repository if record property
+        /// date matches the date parameter or returns a 404 status code if no record is found.
+        /// </summary>
+        /// <param name="date">Solar production's date</param>
+        /// <returns>
+        /// An IActionResult object that contains either a 404 status code
+        /// and a message if the production data is not available, or a 200
+        /// status code and the production data record as the content if it is 
+        /// available.
+        /// </returns>
+        [HttpGet]
+        [Route("GetProductionDataByDate")]
+        public async Task<IActionResult> GetProductionDataByDateAsync(DateTime date)
+        {
+            var productionData = await _repository.GetProductionDataByDateAsync(date);
+
+            if (productionData is null)
             {
                 return NotFound();
             }
