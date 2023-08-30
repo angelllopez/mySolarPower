@@ -7,12 +7,8 @@ namespace MySolarPower.Data.Repositories;
 
 public class ProductionRepository : IProductionRepository
 {
-    private readonly PowerUsageDbContext? _context;
+    private readonly PowerUsageDbContext _context;
     private readonly ILogger<ProductionRepository>? _logger;
-
-    public ProductionRepository()
-    {
-    }
 
     public ProductionRepository(PowerUsageDbContext context, ILogger<ProductionRepository> logger)
     {
@@ -22,6 +18,7 @@ public class ProductionRepository : IProductionRepository
     public void Dispose()
     {
         _context?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     public async Task<IEnumerable<SolarPower>> GetProductionDataAsync()
@@ -32,7 +29,7 @@ public class ProductionRepository : IProductionRepository
                                   nameof(SolarPower),
                                              DateTime.UtcNow);
 
-        List<SolarPower> results = new List<SolarPower>();
+        List<SolarPower> results = new ();
         try
         {
             results = await _context.SolarPowers.ToListAsync();
@@ -44,8 +41,6 @@ public class ProductionRepository : IProductionRepository
         }
         catch (Exception ex)
         {
-            //throw new Exception($"Couldn't retrieve entities: {ex.Message}");
-            //return Enumerable.Empty<SolarPower>();
             _logger?.LogError(ex,
                 "Returned an empty list {@EntityName}, {@DateTimeUtc}",
                     nameof(SolarPower),
@@ -53,5 +48,28 @@ public class ProductionRepository : IProductionRepository
         }
 
         return results;
+    }
+
+    public async Task<SolarPower?> GetProductionDataByDateAsync(DateTime date)
+    {
+        SolarPower? result = null;
+        try
+        {
+            result = await _context.SolarPowers.Where(x => x.Date == date).SingleAsync();
+
+            _logger?.LogInformation(
+                "Completed GetProductionDataByDate {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Returned an empty object {@EntityName}, {@DateTimeUtc}",
+                    nameof(SolarPower),
+                    DateTime.UtcNow);
+        }
+
+        return result;
     }
 }

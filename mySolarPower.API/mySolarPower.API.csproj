@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>bfa3a826-0135-4d10-b066-7355f99e2a01</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\Debug\net7.0\MySolarPower.API.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
