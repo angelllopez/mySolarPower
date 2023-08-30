@@ -66,5 +66,19 @@ namespace mySolarPower.API.Controllers
 
             return Ok(productionData);
         }
+
+        [HttpGet]
+        [Route("GetProductionDataByMonth")]
+        public async Task<IActionResult> GetProductionDataByMonthAsync(DateTime date)
+        {
+            var productionData = await _repository.GetProductionDataByMonthAsync(date);
+
+            if (!productionData.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(productionData);
+        }
     }
 }

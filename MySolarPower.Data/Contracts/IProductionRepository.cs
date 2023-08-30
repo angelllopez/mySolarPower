@@ -6,4 +6,5 @@ public interface IProductionRepository : IDisposable
 {
     Task<IEnumerable<SolarPower>> GetProductionDataAsync();
     Task<SolarPower?> GetProductionDataByDateAsync(DateTime date);
+    Task<IEnumerable<SolarPower>> GetProductionDataByMonthAsync(DateTime date);
 }

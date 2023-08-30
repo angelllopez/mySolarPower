@@ -90,7 +90,7 @@ public class ProductionRepositoryTests
         var dummyLogger = new Mock<ILogger<ProductionRepository>>();
         var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
         var date = new DateTime(2021, 1, 2);
-        var expected = _records.Where(x => x.Date == date).Single();
+        SolarPower expected = _records.Where(x => x.Date == date).Single();
 
         // Act
         var result = await repository.GetProductionDataByDateAsync(date);
@@ -130,5 +130,39 @@ public class ProductionRepositoryTests
 
         // Assert
         Assert.Null(result);    
-    }   
+    }
+
+    [Fact]  
+    public async Task GetProductionDataByMonthAsync_ReturnsExpectedRecords_WhenRecordsExist()
+    {
+        //Arrange
+        mockContext.Setup(c => c.SolarPowers).Returns(_records.AsQueryable().BuildMockDbSet().Object);
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
+        var date = new DateTime(2021, 1, 1);
+
+        // Act
+        var result = await repository.GetProductionDataByMonthAsync(date);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(_records, result);
+    }
+
+    [Fact]
+    public async Task GetProductionDataByMonthAsync_ReturnsEmptyCollectionOfRecords_WhenRecordsDoesNotExists()
+    {
+        //Arrange
+        var dummyContext = new Mock<PowerUsageDbContext>();
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(dummyContext.Object, dummyLogger.Object);
+        var date = new DateTime(2021, 1, 1);
+
+        // Act
+        var result = await repository.GetProductionDataByMonthAsync(date);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
 }

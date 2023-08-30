@@ -109,4 +109,44 @@ public class ProductionControllerTests
         Assert.IsType<NotFoundResult>(actual);
     }
 
+    [Fact]
+    public async Task GetProductionDataByMonthAsynct_ReturnsOk_WhenRecordsMatchMonth()
+    {
+        //Arrange
+        DateTime testDate = new DateTime(2021, 1, 1);
+        var mockProductionRepository = new Mock<IProductionRepository>();
+        mockProductionRepository.Setup(x =>
+                   x.GetProductionDataByMonthAsync(It.IsAny<DateTime>()))
+            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Month == date.Month));
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.GetProductionDataByMonthAsync(testDate);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkObjectResult>(actual);
+    }
+
+    [Fact]
+    public async Task GetProductionDataByMonthAsync_ReturnsNotFound_WhenRecordsDoNotMatchMonth()
+    {
+        //Arrange
+        DateTime testDate = new DateTime(2021, 2, 1);
+        var mockProductionRepository = new Mock<IProductionRepository>();
+        mockProductionRepository.Setup(x =>
+                   x.GetProductionDataByMonthAsync(It.IsAny<DateTime>()))
+            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Month == date.Month));
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.GetProductionDataByMonthAsync(testDate);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<NotFoundResult>(actual);
+    }
+
 }
