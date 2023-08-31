@@ -25,14 +25,16 @@ public class ProductionRepository : IProductionRepository
     {
 
         _logger?.LogInformation(
-                       "Started GetProductionData {@EntityName}, {@DateTimeUtc}",
-                                  nameof(SolarPower),
-                                             DateTime.UtcNow);
+            "Started GetProductionData {@EntityName}, {@DateTimeUtc}",
+            nameof(SolarPower),
+            DateTime.UtcNow);
 
         List<SolarPower> results = new ();
         try
         {
-            results = await _context.SolarPowers.ToListAsync();
+            results = await _context.SolarPowers
+                .AsNoTracking()
+                .ToListAsync();
 
             _logger?.LogInformation(
                 "Completed GetProductionData {@EntityName}, {@DateTimeUtc}",
@@ -50,15 +52,18 @@ public class ProductionRepository : IProductionRepository
         return results;
     }
 
-    public async Task<SolarPower?> GetProductionDataByDateAsync(DateTime date)
+    public async Task<SolarPower?> GetProductionDataByDayAsync(DateTime date)
     {
         SolarPower? result = null;
         try
         {
-            result = await _context.SolarPowers.Where(x => x.Date == date).SingleAsync();
+            result = await _context.SolarPowers
+                .Where(x => x.Date == date)
+                .AsNoTracking()
+                .SingleAsync();
 
             _logger?.LogInformation(
-                "Completed GetProductionDataByDate {@EntityName}, {@DateTimeUtc}",
+                "Completed GetProductionDataByDay {@EntityName}, {@DateTimeUtc}",
                 nameof(SolarPower),
                 DateTime.UtcNow);
         }
@@ -71,5 +76,72 @@ public class ProductionRepository : IProductionRepository
         }
 
         return result;
+    }
+
+    public async Task<IEnumerable<SolarPower>> GetProductionDataByMonthAsync(DateTime date)
+    {
+        IEnumerable<SolarPower> results = Enumerable.Empty<SolarPower>();
+        try
+        {
+            // return a collection that matches year and month.
+            results = await _context.SolarPowers
+                .Where(x => x.Date.Value.Month == date.Month && x.Date.Value.Year == date.Year)
+                .AsNoTracking()
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            if (!results.Any())
+            {
+                throw new Exception("No data found for the month.");
+            }
+
+
+            _logger?.LogInformation(
+                "Completed GetProductionDataByMonth {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Returned an empty list {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+
+        return results;
+    }
+
+    public async Task<IEnumerable<SolarPower>> GetProductionDataByYearAsync(DateTime date)
+    {
+        IEnumerable<SolarPower> results = Enumerable.Empty<SolarPower>();
+        try
+        {
+            // return a collection that matches year if not match throw an exception.
+            results = await _context.SolarPowers
+                .Where(x => x.Date.Value.Year == date.Year)
+                .AsNoTracking()
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            if (!results.Any())
+            {
+                throw new Exception("No data found for the year.");
+            }
+
+            _logger?.LogInformation(
+                "Completed GetProductionDataByYear {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Returned an empty list {@EntityName}, {@DateTimeUtc}",
+                nameof(SolarPower),
+                DateTime.UtcNow);
+        }
+
+        return results;
     }
 }
