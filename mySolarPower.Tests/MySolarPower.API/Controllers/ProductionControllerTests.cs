@@ -76,13 +76,13 @@ public class ProductionControllerTests
         DateTime testDate = new DateTime(2021, 1, 1);
         Mock<IProductionRepository> mockProductionRepository = new Mock<IProductionRepository>();
         mockProductionRepository.Setup(x => x.
-        GetProductionDataByDateAsync(It.IsAny<DateTime>()))
+        GetProductionDataByDayAsync(It.IsAny<DateTime>()))
             .ReturnsAsync((DateTime date) => _records.FirstOrDefault(x => x.Date == date));
 
         var controller = new ProductionController(mockProductionRepository.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByDateAsync(testDate);
+        var actual = await controller.GetProductionDataByDayAsync(testDate);
 
         // Assert
         Assert.NotNull(actual);
@@ -96,13 +96,13 @@ public class ProductionControllerTests
         DateTime testDate = new DateTime(2022, 1, 1);
         var mockProductionRepository = new Mock<IProductionRepository>();
         mockProductionRepository.Setup(x =>
-            x.GetProductionDataByDateAsync(It.IsAny<DateTime>()))
+            x.GetProductionDataByDayAsync(It.IsAny<DateTime>()))
             .ReturnsAsync((DateTime date) => _records.FirstOrDefault(x => x.Date == date));
 
         var controller = new ProductionController(mockProductionRepository.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByDateAsync(testDate);
+        var actual = await controller.GetProductionDataByDayAsync(testDate);
 
         // Assert
         Assert.NotNull(actual);
@@ -149,4 +149,43 @@ public class ProductionControllerTests
         Assert.IsType<NotFoundResult>(actual);
     }
 
+    [Fact]
+    public async Task GetProductionDataByYearAsync_ReturnsOk_WhenRecordsMatchYear()
+    {
+        //Arrange
+        DateTime testDate = new DateTime(2021, 1, 1);
+        var mockProductionRepository = new Mock<IProductionRepository>();
+        mockProductionRepository.Setup(x =>
+            x.GetProductionDataByYearAsync(It.IsAny<DateTime>()))
+            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Year == date.Year));
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.GetProductionDataByYearAsync(testDate);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkObjectResult>(actual);
+    }
+
+    [Fact]
+    public async Task GetProductionDataByYearAsync_ReturnsNotFound_WhenRecordsDoNotMatchYear()
+    {
+        //Arrange
+        DateTime testDate = new DateTime(2024, 1, 1);
+        var mockProductionRepository = new Mock<IProductionRepository>();
+        mockProductionRepository.Setup(x =>
+            x.GetProductionDataByYearAsync(It.IsAny<DateTime>()))
+            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Year == date.Year));
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.GetProductionDataByYearAsync(testDate);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<NotFoundResult>(actual);
+    }
 }
