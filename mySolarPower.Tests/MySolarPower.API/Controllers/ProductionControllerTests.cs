@@ -188,4 +188,160 @@ public class ProductionControllerTests
         Assert.NotNull(actual);
         Assert.IsType<NotFoundResult>(actual);
     }
+
+    [Fact]
+    public async Task PostProductionDataRecord_ReturnsOk_WhenRecordIsAdded()
+    {
+        //Arrange
+        SolarPower testRecord = new SolarPower
+        {
+            Id = 3,
+            Date = new DateTime(2021, 1, 3),
+            EnergyProduced = 100,
+            EnergyUsed = 50,
+            MaxAcpowerProduced = 10
+        };
+
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+            x.AddProductionDataAsync(It.IsAny<SolarPower>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.AddProductionDataAsync(testRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]
+    public async Task PostProductionDataRecord_ReturnsBadRequest_WhenRecordIsNotAdded()
+    {
+        //Arrange
+        SolarPower testRecord = new SolarPower
+        {
+            Id = 3,
+            Date = new DateTime(2021, 1, 3),
+            EnergyProduced = 100,
+            EnergyUsed = 50,
+            MaxAcpowerProduced = 10
+        };
+
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+                   x.AddProductionDataAsync(It.IsAny<SolarPower>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.AddProductionDataAsync(testRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
+    }
+
+    [Fact]
+    public async Task DeleteProductionDataAsync_ReturnsOk_WhenRecordIsDeleted()
+    {
+        //Arrange
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+                   x.DeleteProductionDataAsync(It.IsAny<int>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.DeleteProductionDataAsync(1);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]  
+    public async Task DeleteProductionDataAsync_ReturnsBadRequest_WhenRecordIsNotDeleted()
+    {
+        //Arrange
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+                          x.DeleteProductionDataAsync(It.IsAny<int>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.DeleteProductionDataAsync(1);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
+    }
+
+    [Fact]
+    public async Task UpdateProductionDataAsync_ReturnsOk_WhenRecordIsUpdated()
+    {
+        //Arrange
+        SolarPower testRecord = new SolarPower
+        {
+            Id = 1,
+            Date = new DateTime(2021, 1, 1),
+            EnergyProduced = 100,
+            EnergyUsed = 50,
+            MaxAcpowerProduced = 10
+        };
+
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+            x.UpdateProductionDataAsync(It.IsAny<SolarPower>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.UpdateProductionDataAsync(testRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]
+    public async Task UpdateProductionDataAsync_ReturnsBadRequest_WhenRecordIsNotUpdated()
+    {
+        //Arrange
+        SolarPower testRecord = new SolarPower
+        {
+            Id = 1,
+            Date = new DateTime(2021, 1, 1),
+            EnergyProduced = 100,
+            EnergyUsed = 50,
+            MaxAcpowerProduced = 10
+        };
+
+        var mockProductionRepository = new Mock<IProductionRepository>();
+
+        mockProductionRepository.Setup(x =>
+                   x.UpdateProductionDataAsync(It.IsAny<SolarPower>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockProductionRepository.Object);
+
+        // Act
+        var actual = await controller.UpdateProductionDataAsync(testRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
+    }
 }

@@ -15,6 +15,79 @@ public class ProductionRepository : IProductionRepository
         _context = context;
         _logger = logger;
     }
+
+    public async Task<bool> AddProductionDataAsync(SolarPower record)
+    {
+        var methodName = nameof(AddProductionDataAsync);
+        _logger?.LogInformation(
+            "Starting {@MethodName} at {@DateTimeUtc}.", methodName, DateTime.UtcNow);
+
+        try
+        {
+            if (_context.SolarPowers.Any(x => x.Date == record.Date))
+            {
+                throw new Exception("Record already exists.");
+            }
+            else
+            {
+                _context.SolarPowers.Add(record);
+                await _context.SaveChangesAsync();
+
+                _logger?.LogInformation(
+                    "Completed {@MethodName} at {@DateTimeUtc} with result count of 1 record.",
+                    methodName, DateTime.UtcNow);
+
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Failed {@MethodName} at {@DateTimeUtc}.",
+                methodName,
+                DateTime.UtcNow);
+
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteProductionDataAsync(int id)
+    {
+        var methodName = nameof(DeleteProductionDataAsync);
+        _logger?.LogInformation(
+            "Starting {@MethodName} at {@DateTimeUtc}.", methodName, DateTime.UtcNow);
+
+        try
+        {
+            var record = await _context.SolarPowers.FindAsync(id);
+            if (record is not null)
+            {
+                _context.SolarPowers.Remove(record);
+                await _context.SaveChangesAsync();
+
+                _logger?.LogInformation(
+                    "Completed {@MethodName} at {@DateTimeUtc} with result count of 1 record.",
+                    methodName, DateTime.UtcNow);
+
+                return true;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Record with id {id} not found.");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Failed {@MethodName} at {@DateTimeUtc}.",
+                methodName,
+                DateTime.UtcNow);
+
+            return false;
+        }
+    }
+
     public void Dispose()
     {
         _context?.Dispose();
@@ -30,7 +103,7 @@ public class ProductionRepository : IProductionRepository
         _logger?.LogInformation(
             "Starting {@MethodName} at {@DateTimeUtc}.", methodName, DateTime.UtcNow);
 
-        List<SolarPower> results = new ();
+        List<SolarPower> results = new();
         try
         {
             results = await _context.SolarPowers
@@ -39,8 +112,8 @@ public class ProductionRepository : IProductionRepository
                 .ConfigureAwait(true);
 
             _logger?.LogInformation(
-                "Completed {@MethodName} at {@DateTimeUtc} with result count of {@ResultCount} records.", 
-                methodName, 
+                "Completed {@MethodName} at {@DateTimeUtc} with result count of {@ResultCount} records.",
+                methodName,
                 DateTime.UtcNow,
                 results.Count);
         }
@@ -159,5 +232,44 @@ public class ProductionRepository : IProductionRepository
         }
 
         return results;
+    }
+
+    public async Task<bool> UpdateProductionDataAsync(SolarPower productionRecord)
+    {
+        var methodName = nameof(UpdateProductionDataAsync);
+        _logger?.LogInformation(
+            "Starting {@MethodName} at {@DateTimeUtc}.", methodName, DateTime.UtcNow);
+
+        try
+        {
+
+            SolarPower? record =  await _context.SolarPowers.FindAsync(productionRecord.Id);
+
+            if (record is not null)
+            {
+                _context.SolarPowers.Update(productionRecord);
+                await _context.SaveChangesAsync();
+
+                _logger?.LogInformation(
+                    "Completed {@MethodName} at {@DateTimeUtc} with result count of 1 record.",
+                    methodName, DateTime.UtcNow);
+
+                return true;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Record with id {productionRecord.Id} not found.");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex,
+                "Failed {@MethodName} at {@DateTimeUtc}.",
+                methodName,
+                DateTime.UtcNow);
+
+            return false;
+        }
     }
 }

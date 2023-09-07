@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySolarPower.Data.Contracts;
+using MySolarPower.Data.Models;
 
 namespace mySolarPower.API.Controllers;
 
@@ -99,5 +100,47 @@ public class ProductionController : ControllerBase
         }
 
         return Ok(productionData);
+    }
+
+    [HttpPost]
+    [Route("AddProductionData")]
+    public async Task<IActionResult> AddProductionDataAsync(SolarPower productionRecord)
+    {
+        var result = await _repository.AddProductionDataAsync(productionRecord);
+
+        if (result is false)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("DeleteProductionData")]
+    public async Task<IActionResult> DeleteProductionDataAsync(int id)
+    {
+        var result = await _repository.DeleteProductionDataAsync(id);
+
+        if (result is false)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("UpdateProductionData")]
+    public async Task<IActionResult> UpdateProductionDataAsync(SolarPower productionRecord)
+    {
+        var result = await _repository.UpdateProductionDataAsync(productionRecord);
+
+        if (result is false)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
     }
 }
