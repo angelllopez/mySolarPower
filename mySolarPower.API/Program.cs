@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using mySolarPower.Services;
+using mySolarPower.Services.Contracts;
 using MySolarPower.Data.Contracts;
 using MySolarPower.Data.Models;
 using MySolarPower.Data.Repositories;
@@ -7,18 +9,17 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IProductionRepository, ProductionRepository>();
+builder.Services.AddScoped<IProductionDataService, ProductionDataService>();
+
 builder.Host.UseSerilog((context, loggerConfiguration) =>
 loggerConfiguration
     .ReadFrom.Configuration(context.Configuration));
 
-
-// Add services to the container.
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<PowerUsageDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddScoped<IProductionRepository, ProductionRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 

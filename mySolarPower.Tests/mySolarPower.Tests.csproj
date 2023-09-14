@@ -24,8 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mySolarPower.API\mySolarPower.API.csproj" />
+    <ProjectReference Include="..\mySolarPower.API\MySolarPower.API.csproj" />
     <ProjectReference Include="..\MySolarPower.Data\MySolarPower.Data.csproj" />
+    <ProjectReference Include="..\mySolarPower.Services\mySolarPower.Services\mySolarPower.Services.csproj" />
   </ItemGroup>
 
 </Project>

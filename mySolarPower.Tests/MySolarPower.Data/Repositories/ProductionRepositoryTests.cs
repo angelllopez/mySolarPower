@@ -1,5 +1,4 @@
 ﻿using MySolarPower.Data.Models;
-using Moq;
 using MockQueryable.Moq;
 using Microsoft.EntityFrameworkCore;
 using MySolarPower.Data.Repositories;
@@ -120,7 +119,8 @@ public class ProductionRepositoryTests
         var result = await repository.GetProductionDataByDayAsync(date);
 
         // Assert
-        Assert.Null(result);    
+        Assert.NotNull(result);
+        Assert.True(result.Id == 0);
     }
 
     [Fact]
@@ -136,7 +136,8 @@ public class ProductionRepositoryTests
         var result = await repository.GetProductionDataByDayAsync(date);
 
         // Assert
-        Assert.Null(result);    
+        Assert.NotNull(result);
+        Assert.True(result.Id == 0);
     }
 
     [Fact]  
@@ -196,7 +197,6 @@ public class ProductionRepositoryTests
     public async Task GetProductionDataByYearAsync_ReturnsEmptyCollectionOfRecords_WhenRecordsDoesNotExists()
     {
         //Arrange
-        var dummyContext = new Mock<PowerUsageDbContext>();
         mockContext.Setup(c => c.SolarPowers).Returns(_records.AsQueryable().BuildMockDbSet().Object);
         var dummyLogger = new Mock<ILogger<ProductionRepository>>();
         var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
@@ -208,5 +208,53 @@ public class ProductionRepositoryTests
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task AddProductionDataAsync_ShouldReturnTrue_WhenAddingNewRecord_IfRecordDoesNotExist()
+    {
+        //Arrange
+        var record = new SolarPower
+        {
+            Date = new DateTime(2024, 1, 1),
+            EnergyProduced = (decimal?)1.0,
+            EnergyUsed = (decimal?)1.0,
+            MaxAcpowerProduced = (decimal?)1.0
+        };
+
+        mockContext.Setup(c => c.SolarPowers).Returns(_records.AsQueryable().BuildMockDbSet().Object);
+
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
+
+        // Act
+        var result = await repository.AddProductionDataAsync(record);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task AddProductionDataAsync_ShouldReturnFalse_WhenAddingNewRecord_IfRecordAlreadyExists()
+    {
+        //Arrange
+        var record = new SolarPower
+        {
+            Date = new DateTime(2022, 1, 2),
+            EnergyProduced = (decimal?)1.0,
+            EnergyUsed = (decimal?)1.0,
+            MaxAcpowerProduced = (decimal?)1.0
+        };
+
+        mockContext.Setup(c => c.SolarPowers).Returns(_records.AsQueryable().BuildMockDbSet().Object);
+
+        var dummyLogger = new Mock<ILogger<ProductionRepository>>();
+        var repository = new ProductionRepository(mockContext.Object, dummyLogger.Object);
+
+        // Act
+        var result = await repository.AddProductionDataAsync(record);
+
+        // Assert
+        Assert.False(result);
     }
 }

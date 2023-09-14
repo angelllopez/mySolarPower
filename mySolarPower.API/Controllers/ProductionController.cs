@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MySolarPower.Data.Contracts;
+using mySolarPower.Services.Contracts;
+using MySolarPower.Data.Models;
 
 namespace mySolarPower.API.Controllers;
 
@@ -10,15 +11,15 @@ namespace mySolarPower.API.Controllers;
 [ApiController]
 public class ProductionController : ControllerBase
 {
-    private readonly IProductionRepository _repository;
+    private readonly IProductionDataService _dataService;
 
     /// <summary>
     /// Initializes a new instance of the ProductionController class.
     /// </summary>
-    /// <param name="repository">Production repository interface</param>
-    public ProductionController(IProductionRepository repository)
+    /// <param name="dataService">Production repository interface</param>
+    public ProductionController(IProductionDataService dataService)
     {
-        _repository = repository;
+        _dataService = dataService;
     }
 
     /// <summary>
@@ -33,7 +34,8 @@ public class ProductionController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetProductionDataAsync()
     {
-        var productionData = await _repository.GetProductionDataAsync();
+        var productionData = await _dataService.GetAllProductionData();
+
         if (!productionData.Any())
         {
             return NotFound();
@@ -57,14 +59,9 @@ public class ProductionController : ControllerBase
     [Route("GetProductionDataByDay")]
     public async Task<IActionResult> GetProductionDataByDayAsync(DateTime date)
     {
-        var productionData = await _repository.GetProductionDataByDayAsync(date);
+        var productionData = await _dataService.GetProductionDataByDay(date);
 
-        if (productionData is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(productionData);
+        return productionData.Id < 1 ? NotFound() : Ok(productionData);
     }
 
     /// <summary>
@@ -77,27 +74,44 @@ public class ProductionController : ControllerBase
     [Route("GetProductionDataByMonth")]
     public async Task<IActionResult> GetProductionDataByMonthAsync(DateTime date)
     {
-        var productionData = await _repository.GetProductionDataByMonthAsync(date);
+        var productionData = await _dataService.GetProductionDataByMonth(date);
 
-        if (!productionData.Any())
-        {
-            return NotFound();
-        }
-
-        return Ok(productionData);
+        return !productionData.Any() ? NotFound() : Ok(productionData);
     }
 
     [HttpGet]
     [Route("GetProductionDataByYear")]
     public async Task<IActionResult> GetProductionDataByYearAsync(DateTime date)
     {
-        var productionData = await _repository.GetProductionDataByYearAsync(date);
+        var productionData = await _dataService.GetProductionDataByYear(date);
 
-        if (!productionData.Any())
-        {
-            return NotFound();
-        }
+        return !productionData.Any() ? NotFound() : Ok(productionData);
+    }
 
-        return Ok(productionData);
+    [HttpPost]
+    [Route("AddProductionData")]
+    public async Task<IActionResult> AddProductionDataAsync(SolarPower productionRecord)
+    {
+        var result = await _dataService.AddProductionDataRecord(productionRecord);
+
+        return result is false ? BadRequest() : Ok();
+    }
+
+    [HttpDelete]
+    [Route("DeleteProductionData")]
+    public async Task<IActionResult> DeleteProductionDataAsync(int id)
+    {
+        var result = await _dataService.DeleteProductionDataRecord(id);
+
+        return result is false ? BadRequest() : Ok();
+    }
+
+    [HttpPut]
+    [Route("UpdateProductionData")]
+    public async Task<IActionResult> UpdateProductionDataAsync(SolarPower productionRecord)
+    {
+        var result = await _dataService.UpdateProductionDataRecord(productionRecord);
+
+        return result is false ? BadRequest() : Ok();
     }
 }

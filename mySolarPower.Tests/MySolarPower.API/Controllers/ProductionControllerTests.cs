@@ -1,44 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Moq;
 using mySolarPower.API.Controllers;
-using MySolarPower.Data.Contracts;
+using mySolarPower.Services.Contracts;
 using MySolarPower.Data.Models;
 
 namespace mySolarPower.Tests.MySolarPower.API.Controllers;
 
 public class ProductionControllerTests
 {
-    private readonly List<SolarPower> _records = new List<SolarPower>
-    {
-        new SolarPower
-        {
-            Id = 1,
-            Date = new DateTime(2021, 1, 1),
-            EnergyProduced = 100,
-            EnergyUsed = 50,
-            MaxAcpowerProduced = 10
-        },
-        new SolarPower
-        {
-            Id = 2,
-            Date = new DateTime(2021, 1, 2),
-            EnergyProduced = 100,
-            EnergyUsed = 50,
-            MaxAcpowerProduced = 10
-        }
-    };
-
     [Fact]
+    [Trait("Category", "GetProductionDataAsync")]
     public async Task GetProductionDataAsync_ReturnsOk_WhenRecordsExist()
     {
         //Arrange
-        var mockProductionRepository = new Mock<IProductionRepository>();
+        var stubList = new List<SolarPower>() { new SolarPower() };
+        var mockService = new Mock<IProductionDataService>(MockBehavior.Strict);
 
-        mockProductionRepository.Setup(x =>
-            x.GetProductionDataAsync())
-            .ReturnsAsync(_records);
+        mockService.Setup(x =>
+            x.GetAllProductionData())
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
         var actual = await controller.GetProductionDataAsync();
@@ -49,17 +30,18 @@ public class ProductionControllerTests
     }
 
     [Fact]
+    [Trait("Category", "GetProductionDataAsync")]
     public async Task GetProductionDataAsync_ReturnsNotFound_WhenRecordsDoNotExist()
     {
         //Arrange
-        List<SolarPower> emptyList = new List<SolarPower>();
-        var mockProductionRepository = new Mock<IProductionRepository>();
+        List<SolarPower> stubList = new();
+        var mockService = new Mock<IProductionDataService>();
 
-        mockProductionRepository.Setup(x =>
-            x.GetProductionDataAsync())
-            .ReturnsAsync(emptyList);
+        mockService.Setup(x =>
+            x.GetAllProductionData())
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
         var actual = await controller.GetProductionDataAsync();
@@ -70,19 +52,20 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByDateAsync_ReturnsOk_WhenRecordMatchesDate()
+    public async Task GetProductionDataByDayAsync_ReturnsOk_WhenRecordsExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2021, 1, 1);
-        Mock<IProductionRepository> mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x => x.
-        GetProductionDataByDayAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.FirstOrDefault(x => x.Date == date));
+        var stubRecord = new SolarPower { Id = 1 };
+        var mockService = new Mock<IProductionDataService>();
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        mockService.Setup(x =>
+            x.GetProductionDataByDay(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubRecord);
+
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByDayAsync(testDate);
+        var actual = await controller.GetProductionDataByDayAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
@@ -90,19 +73,20 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByDateAsync_ReturnsNotFound_WhenRecordDoesNotMatchDate()
+    public async Task GetProductionDataByDayAsync_ReturnsNotFound_WhenRecordDoesNotExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2022, 1, 1);
-        var mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x =>
-            x.GetProductionDataByDayAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.FirstOrDefault(x => x.Date == date));
+        var stubRecord = new SolarPower();
+        var mockService = new Mock<IProductionDataService>();
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        mockService.Setup(x =>
+            x.GetProductionDataByDay(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubRecord);
+
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByDayAsync(testDate);
+        var actual = await controller.GetProductionDataByDayAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
@@ -110,19 +94,19 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByMonthAsynct_ReturnsOk_WhenRecordsMatchMonth()
+    public async Task GetProductionDataByMonthAsynct_ReturnsOk_WhenRecordsExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2021, 1, 1);
-        var mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x =>
-                   x.GetProductionDataByMonthAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Month == date.Month));
+        var stubList = new List<SolarPower>() { new SolarPower() };
+        var mockService = new Mock<IProductionDataService>();
+        mockService.Setup(x =>
+                   x.GetProductionDataByMonth(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByMonthAsync(testDate);
+        var actual = await controller.GetProductionDataByMonthAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
@@ -130,19 +114,19 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByMonthAsync_ReturnsNotFound_WhenRecordsDoNotMatchMonth()
+    public async Task GetProductionDataByMonthAsync_ReturnsNotFound_WhenRecordsDoNotExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2021, 2, 1);
-        var mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x =>
-                   x.GetProductionDataByMonthAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Month == date.Month));
+        var stubList = new List<SolarPower>();
+        var mockService = new Mock<IProductionDataService>();
+        mockService.Setup(x =>
+                   x.GetProductionDataByMonth(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByMonthAsync(testDate);
+        var actual = await controller.GetProductionDataByMonthAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
@@ -150,19 +134,19 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByYearAsync_ReturnsOk_WhenRecordsMatchYear()
+    public async Task GetProductionDataByYearAsync_ReturnsOk_WhenRecordsExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2021, 1, 1);
-        var mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x =>
-            x.GetProductionDataByYearAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Year == date.Year));
+        var stubList = new List<SolarPower>() { new SolarPower() };
+        var mockService = new Mock<IProductionDataService>();
+        mockService.Setup(x =>
+            x.GetProductionDataByYear(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByYearAsync(testDate);
+        var actual = await controller.GetProductionDataByYearAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
@@ -170,22 +154,146 @@ public class ProductionControllerTests
     }
 
     [Fact]
-    public async Task GetProductionDataByYearAsync_ReturnsNotFound_WhenRecordsDoNotMatchYear()
+    public async Task GetProductionDataByYearAsync_ReturnsNotFound_WhenRecordsDoNotExist()
     {
         //Arrange
-        DateTime testDate = new DateTime(2024, 1, 1);
-        var mockProductionRepository = new Mock<IProductionRepository>();
-        mockProductionRepository.Setup(x =>
-            x.GetProductionDataByYearAsync(It.IsAny<DateTime>()))
-            .ReturnsAsync((DateTime date) => _records.Where(x => x.Date.Value.Year == date.Year));
+        var stubList = new List<SolarPower>();
+        var mockService = new Mock<IProductionDataService>();
+        mockService.Setup(x =>
+            x.GetProductionDataByYear(It.IsAny<DateTime>()))
+            .ReturnsAsync(stubList);
 
-        var controller = new ProductionController(mockProductionRepository.Object);
+        var controller = new ProductionController(mockService.Object);
 
         // Act
-        var actual = await controller.GetProductionDataByYearAsync(testDate);
+        var actual = await controller.GetProductionDataByYearAsync(new DateTime());
 
         // Assert
         Assert.NotNull(actual);
         Assert.IsType<NotFoundResult>(actual);
+    }
+
+    [Fact]
+    public async Task PostProductionDataRecord_ReturnsOk_WhenRecordIsAdded()
+    {
+        //Arrange
+        var dummyRecord = new SolarPower();
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+            x.AddProductionDataRecord(It.IsAny<SolarPower>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.AddProductionDataAsync(dummyRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]
+    public async Task PostProductionDataRecord_ReturnsBadRequest_WhenRecordIsNotAdded()
+    {
+        //Arrange
+        var dummyRecord = new SolarPower();
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+                   x.AddProductionDataRecord(It.IsAny<SolarPower>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.AddProductionDataAsync(dummyRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
+    }
+
+    [Fact]
+    public async Task DeleteProductionDataAsync_ReturnsOk_WhenRecordIsDeleted()
+    {
+        //Arrange
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+                   x.DeleteProductionDataRecord(It.IsAny<int>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.DeleteProductionDataAsync(1);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]  
+    public async Task DeleteProductionDataAsync_ReturnsBadRequest_WhenRecordIsNotDeleted()
+    {
+        //Arrange
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+                          x.DeleteProductionDataRecord(It.IsAny<int>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.DeleteProductionDataAsync(1);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
+    }
+
+    [Fact]
+    public async Task UpdateProductionDataAsync_ReturnsOk_WhenRecordIsUpdated()
+    {
+        //Arrange
+        var dummyRecord = new SolarPower();
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+            x.UpdateProductionDataRecord(It.IsAny<SolarPower>()))
+            .ReturnsAsync(true);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.UpdateProductionDataAsync(dummyRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<OkResult>(actual);
+    }
+
+    [Fact]
+    public async Task UpdateProductionDataAsync_ReturnsBadRequest_WhenRecordIsNotUpdated()
+    {
+        //Arrange
+        var dummyRecord = new SolarPower();
+        var mockService = new Mock<IProductionDataService>();
+
+        mockService.Setup(x =>
+                   x.UpdateProductionDataRecord(It.IsAny<SolarPower>()))
+            .ReturnsAsync(false);
+
+        var controller = new ProductionController(mockService.Object);
+
+        // Act
+        var actual = await controller.UpdateProductionDataAsync(dummyRecord);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.IsType<BadRequestResult>(actual);
     }
 }

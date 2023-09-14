@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MySolarPower.Data\MySolarPower.Data.csproj" />
+    <ProjectReference Include="..\mySolarPower.Services\mySolarPower.Services\mySolarPower.Services.csproj" />
   </ItemGroup>
 
 </Project>

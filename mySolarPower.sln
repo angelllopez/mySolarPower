@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.API", "mySolarPower.API\mySolarPower.API.csproj", "{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySolarPower.API", "mySolarPower.API\MySolarPower.API.csproj", "{8DBAD54F-53B2-40BA-B727-FCF16FCE215E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySolarPower.Data", "MySolarPower.Data\MySolarPower.Data.csproj", "{4BC16A77-521B-4BB3-803E-0C649359F93B}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3AA309D8-902C-4218-B9F9-219267BDBF5F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BBE1525C-F8A4-4D84-AD35-9ACE2186F810}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mySolarPower.Services", "mySolarPower.Services\mySolarPower.Services\mySolarPower.Services.csproj", "{AB68D493-908F-48D0-AC32-A192C1935545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB68D493-908F-48D0-AC32-A192C1935545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB68D493-908F-48D0-AC32-A192C1935545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB68D493-908F-48D0-AC32-A192C1935545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB68D493-908F-48D0-AC32-A192C1935545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{8DBAD54F-53B2-40BA-B727-FCF16FCE215E} = {0E0A86AF-6A70-4A60-A42F-86BF676282D1}
 		{4BC16A77-521B-4BB3-803E-0C649359F93B} = {3AA309D8-902C-4218-B9F9-219267BDBF5F}
 		{AD4156D0-4CCB-44CD-B77A-C03A1F60404B} = {BBE1525C-F8A4-4D84-AD35-9ACE2186F810}
+		{AB68D493-908F-48D0-AC32-A192C1935545} = {0E0A86AF-6A70-4A60-A42F-86BF676282D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE6BC405-4C7E-4BDA-8285-428A7A514EBF}
