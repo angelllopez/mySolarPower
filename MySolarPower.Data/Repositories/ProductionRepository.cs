@@ -128,7 +128,7 @@ public class ProductionRepository : IProductionRepository
         return results;
     }
 
-    public async Task<SolarPower?> GetProductionDataByDayAsync(DateTime date)
+    public async Task<SolarPower> GetProductionDataByDayAsync(DateTime date)
     {
         var methodName = nameof(GetProductionDataByDayAsync);
         _logger?.LogInformation(
@@ -136,7 +136,7 @@ public class ProductionRepository : IProductionRepository
             methodName,
             DateTime.UtcNow);
 
-        SolarPower? result = null;
+        SolarPower? result = new();
         try
         {
             result = await _context.SolarPowers

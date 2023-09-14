@@ -1,5 +1,4 @@
 ﻿using MySolarPower.Data.Models;
-using Moq;
 using MockQueryable.Moq;
 using Microsoft.EntityFrameworkCore;
 using MySolarPower.Data.Repositories;
@@ -120,7 +119,8 @@ public class ProductionRepositoryTests
         var result = await repository.GetProductionDataByDayAsync(date);
 
         // Assert
-        Assert.Null(result);    
+        Assert.NotNull(result);
+        Assert.True(result.Id == 0);
     }
 
     [Fact]
@@ -136,7 +136,8 @@ public class ProductionRepositoryTests
         var result = await repository.GetProductionDataByDayAsync(date);
 
         // Assert
-        Assert.Null(result);    
+        Assert.NotNull(result);
+        Assert.True(result.Id == 0);
     }
 
     [Fact]  
