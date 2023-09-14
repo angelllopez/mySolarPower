@@ -84,7 +84,7 @@ public  class ProductionDataService : IProductionDataService
         return await _repository.GetProductionDataAsync();
     }
 
-    public async Task<SolarPower> GetProductionDataByDay(DateTime date)
+    public async Task<SolarPower> GetProductionDataByDay(DateTime? date)
     {
         var methodName = MethodBase.GetCurrentMethod()?.Name;
 

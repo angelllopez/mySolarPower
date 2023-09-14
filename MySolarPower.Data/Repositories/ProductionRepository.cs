@@ -128,7 +128,7 @@ public class ProductionRepository : IProductionRepository
         return results;
     }
 
-    public async Task<SolarPower> GetProductionDataByDayAsync(DateTime date)
+    public async Task<SolarPower> GetProductionDataByDayAsync(DateTime? date)
     {
         var methodName = nameof(GetProductionDataByDayAsync);
         _logger?.LogInformation(
