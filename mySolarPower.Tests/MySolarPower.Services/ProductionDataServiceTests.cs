@@ -8,6 +8,25 @@ namespace mySolarPower.Tests.MySolarPower.Services;
 
 public class ProductionDataServiceTests
 {
+    public static IEnumerable<object[]> GetSolarPowerRecord()
+    {
+        yield return new object[]
+        {
+            new SolarPower
+            {
+                Date = new DateTime(2020, 1, 1)
+            }
+        };
+
+        yield return new object[]
+        {
+            new SolarPower
+            {
+                Date = DateTime.UtcNow.AddDays(1)
+            }
+        };
+    }
+
     [Fact]
     public async Task AddProductionDataRecord_ShouldCallMethod_AddProductionDataAsync()
     {
@@ -27,10 +46,11 @@ public class ProductionDataServiceTests
         mockRepo.Verify(repo => repo.AddProductionDataAsync(It.IsAny<SolarPower>()), Times.Once);
     }
 
-    [Fact]
-    public async Task AddProductionDataRecord_ShouldNotCallMethod_AddProductionDataAsync_WhenDateIsOutOfRange()
+    [Theory]
+    [MemberData(nameof(GetSolarPowerRecord))]
+    public async Task AddProductionDataRecord_ShouldNotCallMethod_AddProductionDataAsync_WhenDateIsOutOfRange(SolarPower record)
     {
-          // Arrange
+        // Arrange
         var mockRepo = new Mock<IProductionRepository>();
         mockRepo.Setup(repo => repo.AddProductionDataAsync(It.IsAny<SolarPower>()))
             .ReturnsAsync(true);
@@ -40,7 +60,7 @@ public class ProductionDataServiceTests
         var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
 
         // Act
-        await service.AddProductionDataRecord(new SolarPower() { Date = DateTime.UtcNow.AddDays(1)});
+        await service.AddProductionDataRecord(record);
 
         // Assert
         mockRepo.Verify(repo => repo.AddProductionDataAsync(It.IsAny<SolarPower>()), Times.Never);
@@ -105,7 +125,7 @@ public class ProductionDataServiceTests
 
     [Fact]
     public async Task GetProductionDataByDay_ShouldCallMethod_GetProductionDataByDayAsync_WhenParameterDateIsInRange()
-    { 
+    {
         // Arrange
         var mockRepo = new Mock<IProductionRepository>();
         var date = new DateTime(2021, 1, 1);
@@ -124,8 +144,9 @@ public class ProductionDataServiceTests
         mockRepo.Verify(repo => repo.GetProductionDataByDayAsync(date), Times.Once);
     }
 
-    [Fact]
-    public async Task GetProductionDataByDay_ShouldNotCallMethod_GetProductionDataByDayAsync_WhenParameterDateIsOutOfRange()
+    [Theory]
+    [MemberData(nameof(GetSolarPowerRecord))]    
+    public async Task GetProductionDataByDay_ShouldNotCallMethod_GetProductionDataByDayAsync_WhenParameterDateIsOutOfRange(SolarPower record)
     {
         // Arrange
         var mockRepo = new Mock<IProductionRepository>();
@@ -138,7 +159,7 @@ public class ProductionDataServiceTests
         var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
 
         // Act
-        var result = await service.GetProductionDataByDay(DateTime.UtcNow.AddDays(1));
+        var result = await service.GetProductionDataByDay(record.Date);
 
         // Assert
         mockRepo.Verify(repo => repo.GetProductionDataByDayAsync(It.IsAny<DateTime>()), Times.Never);
@@ -165,8 +186,9 @@ public class ProductionDataServiceTests
         mockRepo.Verify(repo => repo.GetProductionDataByMonthAsync(date), Times.Once);
     }
 
-    [Fact]
-    public async Task GetProductionDataByMonth_ShouldNotCallMethod_GetProductionDataByMonthAsync_WhenParameterDateIsOutOfRange()
+    [Theory]
+    [MemberData(nameof(GetSolarPowerRecord))]
+    public async Task GetProductionDataByMonth_ShouldNotCallMethod_GetProductionDataByMonthAsync_WhenParameterDateIsOutOfRange(SolarPower record)
     {
         // Arrange
         var mockRepo = new Mock<IProductionRepository>();
@@ -179,7 +201,7 @@ public class ProductionDataServiceTests
         var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
 
         // Act
-        var result = await service.GetProductionDataByMonth(DateTime.UtcNow.AddDays(1));
+        var result = await service.GetProductionDataByMonth((DateTime)record.Date);
 
         // Assert
         mockRepo.Verify(repo => repo.GetProductionDataByMonthAsync(It.IsAny<DateTime>()), Times.Never);
@@ -206,8 +228,9 @@ public class ProductionDataServiceTests
         mockRepo.Verify(repo => repo.GetProductionDataByYearAsync(date), Times.Once);
     }
 
-    [Fact]
-    public async Task GetProductionDataByYear_ShouldNotCallMethod_GetProductionDataByYearAsync_WhenParameterDateIsOutOfRange()
+    [Theory]
+    [MemberData(nameof(GetSolarPowerRecord))]
+    public async Task GetProductionDataByYear_ShouldNotCallMethod_GetProductionDataByYearAsync_WhenParameterDateIsOutOfRange(SolarPower record)
     {
         // Arrange
         var mockRepo = new Mock<IProductionRepository>();
@@ -220,7 +243,7 @@ public class ProductionDataServiceTests
         var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
 
         // Act
-        var result = await service.GetProductionDataByYear(DateTime.UtcNow.AddDays(1));
+        var result = await service.GetProductionDataByYear((DateTime)record.Date);
 
         // Assert
         mockRepo.Verify(repo => repo.GetProductionDataByYearAsync(It.IsAny<DateTime>()), Times.Never);
@@ -233,11 +256,7 @@ public class ProductionDataServiceTests
         var mockRepo = new Mock<IProductionRepository>();
         var record = new SolarPower
         {
-            Id = 1,
             Date = new DateTime(2021, 1, 1),
-            EnergyProduced = 100,
-            EnergyUsed = 50,
-            MaxAcpowerProduced = 10
         };
 
         mockRepo.Setup(repo => repo.UpdateProductionDataAsync(It.IsAny<SolarPower>()))
@@ -254,19 +273,12 @@ public class ProductionDataServiceTests
         mockRepo.Verify(repo => repo.UpdateProductionDataAsync(record), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateProductionDataRecord_ShouldNotCallMethod_UpdateProductionDataAsync_WhenParameterDateIsOutOfRange()
+    [Theory]
+    [MemberData(nameof(GetSolarPowerRecord))]
+    public async Task UpdateProductionDataRecord_ShouldNotCallMethod_UpdateProductionDataAsync_WhenParameterDateIsOutOfRange(SolarPower record)
     {
         // Arrange
         var mockRepo = new Mock<IProductionRepository>();
-        var record = new SolarPower
-        {
-            Id = 1,
-            Date = DateTime.UtcNow.AddDays(1),
-            EnergyProduced = 100,
-            EnergyUsed = 50,
-            MaxAcpowerProduced = 10
-        };
 
         mockRepo.Setup(repo => repo.UpdateProductionDataAsync(It.IsAny<SolarPower>()))
             .ReturnsAsync(true);
