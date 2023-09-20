@@ -6,6 +6,9 @@ using MySolarPower.Data.Models;
 using MySolarPower.Data.Repositories;
 using Serilog;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,9 @@ builder.Services.AddScoped<IProductionDataService, ProductionDataService>();
 builder.Host.UseSerilog((context, loggerConfiguration) =>
 loggerConfiguration
     .ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddControllers();
 
@@ -48,6 +54,8 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

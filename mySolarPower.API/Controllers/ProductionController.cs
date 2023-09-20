@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using mySolarPower.Services.Contracts;
 using MySolarPower.Data.Models;
 
@@ -30,8 +31,9 @@ public class ProductionController : ControllerBase
     /// and a message if the production data is not available, or a 200
     /// status code and a collection production data records as the content if it is 
     /// available.
-    /// </returns>
+    /// </returns>    
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetProductionDataAsync()
     {
         var productionData = await _dataService.GetAllProductionData();
