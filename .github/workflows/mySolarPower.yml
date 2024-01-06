@@ -4,22 +4,15 @@ jobs:
   my-solar-power-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with: 
-          repository: |
-            angelllopez/mySolarPower
-          path: |
-            mySolarPower/mySolarPower.API/
-        
-        
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+      - name: Checkout repository code
+        uses: actions/checkout@v2
         with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal --framework net7.0
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - name: Build and test solution
+        run: |
+          dotnet restore
+          dotnet build
+          dotnet test
+          working-directory: ./mySolarPower
+
