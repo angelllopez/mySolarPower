@@ -6,10 +6,19 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+        with: 
+          repository: |
+            angelllopez/mySolarPower
+          path: |
+            /mySolarPower.Data
+            /mySolarPower.API
+            /mySolarPower.Services
+            /mySolarPower.Tests            
+        
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '7.0.0'
+          dotnet-version: '7.0.x'
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
