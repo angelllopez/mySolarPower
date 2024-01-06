@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
 using mySolarPower.Services;
 using mySolarPower.Services.Contracts;
 using MySolarPower.Data.Contracts;
@@ -6,11 +8,32 @@ using MySolarPower.Data.Models;
 using MySolarPower.Data.Repositories;
 using Serilog;
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
+
+var allowSpecificOrigins = "_myAllowSpecificOrigins";
+var allowAnyOrigin = "_myAllowAnyOrigin";
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+/*
+ * Same-origin policy: https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy
+ * Cross-Origin Resource Sharing (CORS): https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+ */
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7258/", "https://localhost:7148/");
+                      });
+
+    options.AddPolicy(name: allowAnyOrigin,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin();
+                      });
+});
+
 
 builder.Services.AddScoped<IProductionRepository, ProductionRepository>();
 builder.Services.AddScoped<IProductionDataService, ProductionDataService>();
@@ -49,6 +72,11 @@ if (app.Environment.IsDevelopment())
     // specifying the Swagger JSON endpoint.
     app.UseSwaggerUI(c => 
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MySolarPower.API v1"));
+
+    app.UseCors(allowAnyOrigin);
+} else
+{
+    app.UseCors(allowSpecificOrigins);
 }
 
 app.UseSerilogRequestLogging();
