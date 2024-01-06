@@ -18,7 +18,7 @@ public class ProductionController : ControllerBase
     /// Initializes a new instance of the ProductionController class.
     /// </summary>
     /// <param name="dataService">
-    /// A IProductionDataService type that represents the dependency injected.
+    /// An IProductionDataService type that represents the dependency injected.
     /// Production repository interface
     /// </param>
     public ProductionController(IProductionDataService dataService)
