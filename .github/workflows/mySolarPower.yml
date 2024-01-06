@@ -10,10 +10,10 @@ jobs:
           repository: |
             angelllopez/mySolarPower
           path: |
-            mySolarPower/MySolarPower.Data/MySolarPower.Data.csproj
-            mySolarPower/mySolarPower.API/MySolarPower.API.csproj
-            mySolarPower/mySolarPower.Services/MySolarPower.Services.csproj
-            mySolarPower/mySolarPower.Tests/MySolarPower.Tests.csproj            
+            mySolarPower/MySolarPower.Data/
+            mySolarPower/mySolarPower.API/
+            mySolarPower/mySolarPower.Services/MySolarPower.Services/
+            mySolarPower/mySolarPower.Tests/            
         
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
