@@ -86,6 +86,22 @@ public class ProductionDataServiceTests
     }
 
     [Fact]
+    public async Task DeleteProductionDataRecord_ShouldThrowArgumentException_WhenIdIsDecimal()
+    {
+        // Arrange
+        var mockRepo = new Mock<IProductionRepository>();
+        mockRepo.Setup(repo => repo.DeleteProductionDataAsync(It.IsAny<int>()))
+            .ReturnsAsync(true);
+
+        var dummyLogger = new Mock<ILogger<ProductionDataService>>();
+
+        var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
+
+        // Act
+        await service.DeleteProductionDataRecord(1.5);
+    }
+
+    [Fact]
     public async Task DeleteProductionDataRecord_ShouldNotCallMethod_DeleteProductionDataAsync_WhenIdIsLessThanOne()
     {
         // Arrange
