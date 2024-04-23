@@ -30,7 +30,7 @@ jobs:
 
       - name: Build unit tests projects
         run: |
-            cd ./mySolarPower/mySolarPower.Tests
+            cd /mySolarPower.Tests
             dotnet build mySolarPower.Tests.csproj
             
       - name: Run unit tests projects
