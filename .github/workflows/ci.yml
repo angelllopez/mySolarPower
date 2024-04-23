@@ -25,6 +25,11 @@ jobs:
         run: dotnet restore
         working-directory: ${{ github.workspace }}
 
+      - name: Print variables
+        run: |
+          echo "name is $(github.workspace)"
+
+
       - name: Build changed projects
         run: dotnet build
 
