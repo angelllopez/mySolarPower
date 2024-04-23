@@ -28,7 +28,7 @@ jobs:
 
       - name: Restore dependencies
         run: |
-          cd ${{ github.workspace }}/mySolarPower.API
+          cd ${{ github.workspace }}/mySolarPower
           dotnet restore
 
       - name: Build changed projects
