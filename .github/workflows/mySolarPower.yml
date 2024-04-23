@@ -23,14 +23,14 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: ${{ github.workspace }}
+        working-directory: ./mySolarPower
 
       - name: Build changed projects
         run: dotnet build
 
       - name: Build unit tests projects
         run: |
-            cd ${{ github.workspace }}/mySolarPower.Tests
+            cd ./mySolarPower/mySolarPower.Tests
             dotnet build mySolarPower.Tests.csproj
             
       - name: Run unit tests projects
