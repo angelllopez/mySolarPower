@@ -23,7 +23,6 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: ./mySolarPower
 
       - name: Build changed projects
         run: dotnet build
