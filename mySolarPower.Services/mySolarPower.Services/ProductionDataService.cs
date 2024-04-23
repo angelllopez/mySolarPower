@@ -101,15 +101,10 @@ public  class ProductionDataService : IProductionDataService
         try
         {
             // Check if the id is a natural number.
-            if(id % 1 != 0)
+            if(id <= 0)
             {
-                throw new ArgumentException(string.Format("{0} is not a natural number.", id), nameof(id));
+                throw new ArgumentException(string.Format("{0} is not a valid input.", id), nameof(id));
             }
-
-            //if (id < 1)
-            //{
-            //    throw new ArgumentException(string.Format("{0} is not a natural number.", id), nameof(id));
-            //}
         }
         catch (Exception ex)
         {

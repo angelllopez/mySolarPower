@@ -98,7 +98,7 @@ public class ProductionDataServiceTests
         var service = new ProductionDataService(mockRepo.Object, dummyLogger.Object);
 
         // Act
-        await service.DeleteProductionDataRecord(1.5);
+        await service.DeleteProductionDataRecord(1);
     }
 
     [Fact]
