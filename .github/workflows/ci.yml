@@ -27,7 +27,9 @@ jobs:
           echo "name is ${{ github.workspace }}"          
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: |
+          cd ${{ github.workspace }}/mySolarPower.API
+          dotnet restore
 
       - name: Build changed projects
         run: dotnet build
