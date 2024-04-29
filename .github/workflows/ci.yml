@@ -21,18 +21,14 @@ jobs:
         with:
           dotnet-version: '8.x'
           
-      - name: Print variables
-        working-directory: ${{ github.workspace }}
-        run: |
-          echo "name is ${{ github.workspace }}"          
-
       - name: Restore dependencies
-        run: |
-          cd ${{ github.workspace }}/mySolarPower
-          dotnet restore
+        run: dotnet restore
+        working-directory: ${{ github.workspace }}
 
       - name: Build changed projects
-        run: dotnet build
+        run: |
+            cd ${{ github.workspace }}/mySolarPower
+            dotnet build mySolarPower.csproj
 
       - name: Build unit tests projects
         run: |
